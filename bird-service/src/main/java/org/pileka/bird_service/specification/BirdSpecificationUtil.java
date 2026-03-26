@@ -3,6 +3,7 @@ package org.pileka.bird_service.specification;
 import lombok.experimental.UtilityClass;
 import org.pileka.bird_service.dto.QueryBirdDTO;
 import org.pileka.bird_service.model.Bird;
+import org.pileka.bird_service.model.Bird_;
 import org.pileka.bird_service.model.ConservationStatus;
 import org.springframework.data.jpa.domain.PredicateSpecification;
 import java.time.LocalDateTime;

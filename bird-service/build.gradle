@@ -31,8 +31,12 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
+	compileOnly 'org.hibernate.orm:hibernate-processor:7.2.7.Final'
+	annotationProcessor 'org.hibernate.orm:hibernate-processor:7.2.7.Final'
+
 	implementation 'org.mapstruct:mapstruct:1.6.3'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
