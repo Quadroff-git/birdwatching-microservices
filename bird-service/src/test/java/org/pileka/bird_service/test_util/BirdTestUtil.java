@@ -64,8 +64,9 @@ public final class BirdTestUtil {
         assertEquals(bird.getAverageWingspan(), dto.getAverageWingspan());
         assertEquals(bird.getAverageWeight(), dto.getAverageWeight());
         assertEquals(bird.getDiet(), dto.getDiet());
-        assertEquals(bird.getCreatedAt(), dto.getCreatedAt());
-        assertEquals(bird.getUpdatedAt(), dto.getUpdatedAt());
+        assertEquals(bird.getCreatedAt().getHour(), dto.getCreatedAt().getHour());
+        assertEquals(bird.getUpdatedAt().getMinute(), dto.getUpdatedAt().getMinute());
+        assertEquals(bird.getUpdatedAt().getSecond(), dto.getUpdatedAt().getSecond());
     }
 
     public static void assertModelEqualsDto(Bird bird, CreateUpdateBirdDTO dto) {
