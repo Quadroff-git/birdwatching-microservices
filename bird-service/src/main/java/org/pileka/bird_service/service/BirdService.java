@@ -18,7 +18,7 @@ public interface BirdService {
     Page<ResponseBirdDTO> get(QueryBirdDTO queryDto, Pageable pageable);
 
     @PreAuthorize("hasAnyRole('ADMIN', 'RESEARCHER')")
-    ResponseBirdDTO update(CreateUpdateBirdDTO updateDto);
+    ResponseBirdDTO update(long id, CreateUpdateBirdDTO updateDto);
 
     @PreAuthorize("hasAnyRole('ADMIN', 'RESEARCHER')")
     ResponseBirdDTO delete(long id);
