@@ -39,10 +39,10 @@ public class HeaderFilter extends OncePerRequestFilter {
             authentication.setDetails(request);
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            logger.trace("Successfully authenticated User with ID = " + userId + " and roles = " + userRoles);
         } else {
-            // TODO: log anonymous request
-            // No authentication headers - user is anonymous
-            // SecurityContext will remain empty
+            logger.trace("Received an anonymous request (no X-User-Id and X-User-Roles headers supplied");
         }
 
         filterChain.doFilter(request, response);
