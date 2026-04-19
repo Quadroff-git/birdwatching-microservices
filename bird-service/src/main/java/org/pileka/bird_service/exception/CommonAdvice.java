@@ -26,7 +26,7 @@ public class CommonAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-    public ResponseEntity<String> handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
+    public ErrorResponse handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
         Map<String, String> errorInfo = new HashMap<>();
 
         e.getBindingResult().getAllErrors().forEach(error -> {
@@ -36,7 +36,7 @@ public class CommonAdvice {
             errorInfo.put(fieldName, message);
         });
 
-        return ResponseEntity.badRequest().body(errorInfo.toString());
+        return ErrorResponse.create(e, HttpStatus.BAD_REQUEST, errorInfo.toString());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
