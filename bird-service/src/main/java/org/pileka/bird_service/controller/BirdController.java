@@ -23,7 +23,7 @@ public interface BirdController {
                                    @PageableDefault(size = 20, sort = "commonName") Pageable pageable);
 
     @PutMapping(path = "/{id}", produces = "application/json")
-    ResponseBirdDTO updateBird(@PathVariable long id, @Valid CreateUpdateBirdDTO updateDto);
+    ResponseBirdDTO updateBird(@PathVariable long id, @Valid @RequestBody CreateUpdateBirdDTO updateDto);
 
     @DeleteMapping(path = "/{id}")
     ResponseBirdDTO deleteBird(@PathVariable long id);
