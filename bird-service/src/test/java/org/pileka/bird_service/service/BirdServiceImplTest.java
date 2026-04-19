@@ -112,7 +112,7 @@ public class BirdServiceImplTest {
         when(birdRepository.findBy(
                         Mockito.<PredicateSpecification<Bird>>any(),
                         Mockito.<Function<JpaSpecificationExecutor.SpecificationFluentQuery<Bird>, Page<Bird>>>any())
-        ).thenReturn(emptyPage);;
+        ).thenReturn(emptyPage);
 
         Page<ResponseBirdDTO> result = birdService.get(queryDto, pageable);
 
