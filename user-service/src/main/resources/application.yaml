@@ -1,0 +1,12 @@
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  application:
+    name: user-service
+
+jwt:
+  secret: ${JWT_SECRET}
+  bearer-token-expiration: 900000
+  refresh-token-expiration: 604800000
+  key-size: 32 # in bytes
+  issuer: org.pileka.birdwatching-microservices
