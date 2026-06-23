@@ -8,7 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.pileka.bird_service.dto.CreateUpdateBirdDTO;
 import org.pileka.bird_service.dto.QueryBirdDTO;
 import org.pileka.bird_service.dto.ResponseBirdDTO;
-import org.pileka.bird_service.exception.EntityDoesntExistException;
+import org.pileka.birdwatching_exception_commons.exception.EntityDoesntExistException;
 import org.pileka.bird_service.mapper.BirdMapper;
 import org.pileka.bird_service.model.Bird;
 import org.pileka.bird_service.model.ConservationStatus;
