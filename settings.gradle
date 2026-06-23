@@ -4,6 +4,7 @@ include 'user-service'
 include 'bird-service'
 include 'birdwatching-commons:security-lib'
 include 'birdwatching-commons:exception-lib'
+include 'birdwatching-gateway'
 
 project(':birdwatching-commons:security-lib').projectDir = file('birdwatching-commons/security/lib')
 project(':birdwatching-commons:exception-lib').projectDir = file('birdwatching-commons/exception/lib')

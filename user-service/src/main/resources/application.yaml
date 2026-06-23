@@ -6,7 +6,6 @@ spring:
 
 jwt:
   secret: ${JWT_SECRET}
-  bearer-token-expiration: 900000
-  refresh-token-expiration: 604800000
-  key-size: 32 # in bytes
-  issuer: org.pileka.birdwatching-microservices
+
+server:
+  port: 8082
