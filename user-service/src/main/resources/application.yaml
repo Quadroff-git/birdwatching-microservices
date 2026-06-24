@@ -3,6 +3,9 @@ spring:
     import: optional:file:.env[.properties]
   application:
     name: user-service
+  jpa:
+    hibernate:
+      ddl-auto: create
 
 jwt:
   secret: ${JWT_SECRET}

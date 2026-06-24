@@ -1,10 +1,11 @@
-debug: true
-
 spring:
   config:
     import: optional:file:.env[.properties]
   application:
     name: bird-service
+  jpa:
+    hibernate:
+      ddl-auto: create
 
 jwt:
   secret: ${JWT_SECRET}
