@@ -50,6 +50,10 @@ dependencies {
 	testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
+tasks.named("bootBuildImage") {
+	imageName = "${project.name}"
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 }
