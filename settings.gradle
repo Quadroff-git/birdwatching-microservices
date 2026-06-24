@@ -2,6 +2,7 @@ rootProject.name = 'birdwatching-microservices'
 
 include 'user-service'
 include 'bird-service'
+include 'sighting-service'
 include 'birdwatching-commons:security-lib'
 include 'birdwatching-commons:exception-lib'
 include 'birdwatching-gateway'
