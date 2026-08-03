@@ -40,8 +40,8 @@ public class SharedSecurityConfig {
     }
 
     @Bean
-    @ConditionalOnMissingBean(JWTProvider.class)
-    public JWTProvider jwtProvider(JWTProperties jwtProperties) {
+    @ConditionalOnMissingBean(JWTValidator.class)
+    public JWTValidator jwtValidator(JWTProperties jwtProperties) {
         return new JWTProviderImpl(jwtProperties);
     }
 

@@ -36,29 +36,15 @@ public class JWTProviderImpl implements JWTProvider {
     }
 
     @Override
-    public String generateBearerToken(String username, Set<String> roles) {
+    public String generateBearerToken(String sub, Set<String> roles) {
         return Jwts.builder()
                 .header()
                 .add(getCommonHeaders())
                 .and()
                 .claims()
                     .add(getCommonClaims(jwtProperties.getBearerTokenExpiration()))
-                    .subject(username)
+                    .subject(sub)
                     .add("roles", roles)
-                    .and()
-                .signWith(getSigningKey())
-                .compact();
-    }
-
-    @Override
-    public String generateRefreshToken(String username) {
-        return Jwts.builder()
-                .header()
-                    .add(getCommonHeaders())
-                    .and()
-                .claims()
-                    .add(getCommonClaims(jwtProperties.getRefreshTokenExpiration()))
-                    .subject(username)
                     .and()
                 .signWith(getSigningKey())
                 .compact();
@@ -80,7 +66,7 @@ public class JWTProviderImpl implements JWTProvider {
     }
 
     @Override
-    public String getUsernameFromToken(String token) {
+    public String getSubFromToken(String token) {
         return Jwts.parser()
                 .verifyWith(getSigningKey())
                 .build()
