@@ -10,8 +10,5 @@ public interface JWTProvider extends JWTValidator{
 
     Long getRefreshTokenExpiration();
 
-    String generateBearerToken(String username, Set<String> roles);
-
-    String generateRefreshToken(String username);
-
+    String generateBearerToken(String sub, Set<String> roles);
 }

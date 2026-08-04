@@ -24,9 +24,9 @@ public class JWTAuthenticationManager implements AuthenticationManager {
         }
 
         if (jwtValidator.tokenIsValid(jwtAuth.getJwt())) {
-            log.debug("Authentication success: authenticated user with username " + jwtValidator.getUsernameFromToken(jwtAuth.getJwt()) + " via JWT");
+            log.debug("Authentication success: authenticated user with username " + jwtValidator.getSubFromToken(jwtAuth.getJwt()) + " via JWT");
             return new JWTAuthenticationToken(
-                    jwtValidator.getUsernameFromToken(jwtAuth.getJwt()),
+                    jwtValidator.getSubFromToken(jwtAuth.getJwt()),
                     jwtAuth.getJwt(),
                     jwtValidator.getRolesFromToken(jwtAuth.getJwt()).stream()
                             .map(s -> new SimpleGrantedAuthority("ROLE_" + s))

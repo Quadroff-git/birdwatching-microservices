@@ -1,6 +1,8 @@
 package org.pileka.user_service.security;
 
-import org.pileka.birdwatching_security_commons.authentication.JWTAuthenticationFilter;
+import org.pileka.birdwatching_security_commons.config.JWTProperties;
+import org.pileka.birdwatching_security_commons.jwt.JWTProvider;
+import org.pileka.birdwatching_security_commons.jwt.impl.JWTProviderImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -14,7 +16,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.util.function.SingletonSupplier;
 
 import java.util.List;
@@ -44,6 +45,11 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return SingletonSupplier.of(PasswordEncoderFactories::createDelegatingPasswordEncoder).get();
+    }
+
+    @Bean
+    public JWTProvider jwtProvider(JWTProperties jwtProperties) {
+        return new JWTProviderImpl(jwtProperties);
     }
 
     @Bean
