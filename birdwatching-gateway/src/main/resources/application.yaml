@@ -12,15 +12,18 @@ spring:
               uri: http://user-service:${USERS_PORT}/
               predicates:
                 - Path=${USERS_PATH}/**, ${AUTH_PATH}/**
-            - id: sighting-service
-              uri: http://sighting-service:${SIGHTINGS_PORT}/
-              predicates:
-                - Path=${SIGHTINGS_PATH}/**
 
   application:
     name: gateway
 
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          gateway: TRACE
+
 server:
-  port: ${SERVER_PORT}
+  port: ${GATEWAY_PORT}
   servlet:
     context-path: ${SERVER_PATH}

@@ -1,13 +1,11 @@
 services:
   bird-service:
     image: bird-service:latest
-    env_file: "secret.env"
+    env_file:
+    - "secret.env"
+    - ".env"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/birdwatching_birds
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SERVER_PATH=${SERVER_PATH}
-      - SERVER_PORT=${BIRDS_PORT}
-      - BIRDS_PATH=${BIRDS_PATH}
     ports:
       - ${BIRDS_PORT}:${BIRDS_PORT}
     depends_on:
@@ -16,14 +14,11 @@ services:
 
   user-service:
     image: user-service:latest
-    env_file: "secret.env"
+    env_file:
+    - "secret.env"
+    - ".env"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/birdwatching_users
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SERVER_PATH=${SERVER_PATH}
-      - SERVER_PORT=${USERS_PORT}
-      - AUTH_PATH=${AUTH_PATH}
-      - USERS_PATH=${USERS_PATH}
     ports:
       - ${USERS_PORT}:${USERS_PORT}
     depends_on:
@@ -32,21 +27,11 @@ services:
 
   sighting-service:
     image: sighting-service:latest
-    env_file: "secret.env"
+    env_file:
+    - "secret.env"
+    - ".env"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/birdwatching_sightings
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SERVER_PATH=${SERVER_PATH}
-      - SERVER_PORT=${SIGHTINGS_PORT}
-      - SIGHTINGS_PATH=${SIGHTINGS_PATH}
-      - BIRDS_PATH=${BIRDS_PATH}
-      - USERS_PATH=${USERS_PATH}
-      - GATEWAY_HOST=${GATEWAY_HOST}
-      - GATEWAY_PORT=${GATEWAY_PORT}
-      - RABBIT_HOST=${RABBIT_HOST}
-      - RABBIT_PORT=${RABBIT_PORT}
-      - RABBIT_USERNAME=guest
-      - SIGHTINGS_QUEUE=${SIGHTINGS_QUEUE}
     ports:
       - ${SIGHTINGS_PORT}:${SIGHTINGS_PORT}
     depends_on:
@@ -86,14 +71,7 @@ services:
 
   gateway:
     image: birdwatching-gateway:latest
-    environment:
-      - SERVER_PATH=${SERVER_PATH}
-      - SERVER_PORT=${GATEWAY_PORT}
-      - BIRDS_PORT=${BIRDS_PORT}
-      - USERS_PORT=${USERS_PORT}
-      - BIRDS_PATH=${BIRDS_PATH}
-      - AUTH_PATH=${AUTH_PATH}
-      - USERS_PATH=${USERS_PATH}
+    env_file: ".env"
     ports:
       - ${GATEWAY_PORT}:${GATEWAY_PORT}
 
