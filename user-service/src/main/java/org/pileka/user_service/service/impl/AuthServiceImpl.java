@@ -9,6 +9,7 @@ import org.pileka.user_service.dto.user.CreateUpdateUserDTO;
 import org.pileka.user_service.dto.user.ResponseUserDTO;
 import org.pileka.user_service.mapper.UserMapper;
 import org.pileka.user_service.model.Role;
+import org.pileka.user_service.model.User;
 import org.pileka.user_service.repository.UserRepository;
 import org.pileka.birdwatching_security_commons.jwt.JWTProvider;
 import org.pileka.user_service.service.AuthService;
@@ -52,10 +53,13 @@ public class AuthServiceImpl implements AuthService {
                         loginDto.getPassword()
                 )
         );
+
+        User authenticatedUser = userRepository.findByUsername(auth.getName()).get();
+
         return new TokenDTO(
                 jwtProvider.generateBearerToken(
-                    auth.getName(),
-                    userRepository.findByUsername(auth.getName()).get().getRoles()
+                    authenticatedUser.getId().toString(),
+                    authenticatedUser.getRoles()
                             .stream()
                             .map(Role::name)
                             .collect(Collectors.toSet())
