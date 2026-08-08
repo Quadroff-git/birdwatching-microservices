@@ -29,12 +29,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseUserDTO getByUsername(String username) {
-        return userMapper.toDto(userRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityDoesntExistException("User with username %s doesn't exist and can't be fetched.".formatted(username))));
-    }
-
-    @Override
     public Page<ResponseUserDTO> get(Pageable pageable) {
         return userRepository.findAll(pageable).map(userMapper::toDto);
     }

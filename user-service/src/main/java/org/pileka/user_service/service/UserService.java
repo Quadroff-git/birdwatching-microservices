@@ -12,19 +12,16 @@ import java.util.Set;
 
 public interface UserService {
 
-    @PreAuthorize("@userSecurity.hasId(#id) || hasRole('ADMIN')")
+    @PreAuthorize("authentication.name == #id.toString() || hasRole('ADMIN')")
     ResponseUserDTO getById(long id);
-
-    @PreAuthorize("#username == authentication.name || hasRole('ADMIN')")
-    ResponseUserDTO getByUsername(String username);
 
     @PreAuthorize("hasRole('ADMIN')")
     Page<ResponseUserDTO> get(Pageable pageable);
 
-    @PreAuthorize("@userSecurity.hasId(#id) || hasRole('ADMIN')")
+    @PreAuthorize("authentication.name == #id.toString() || hasRole('ADMIN')")
     ResponseUserDTO update(long id, CreateUpdateUserDTO updateDto);
 
-    @PreAuthorize("@userSecurity.hasId(#id) || hasRole('ADMIN')")
+    @PreAuthorize("authentication.name == #id.toString() || hasRole('ADMIN')")
     ResponseUserDTO delete(long id);
 
     @PreAuthorize("hasRole('ADMIN')")
