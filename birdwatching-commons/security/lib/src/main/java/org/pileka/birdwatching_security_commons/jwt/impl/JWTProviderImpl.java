@@ -11,9 +11,8 @@ import org.pileka.birdwatching_security_commons.jwt.JWTProvider;
 import org.springframework.util.Assert;
 
 import javax.crypto.SecretKey;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class JWTProviderImpl implements JWTProvider {
@@ -36,29 +35,15 @@ public class JWTProviderImpl implements JWTProvider {
     }
 
     @Override
-    public String generateBearerToken(String username, Set<String> roles) {
+    public String generateBearerToken(String sub, Set<String> roles) {
         return Jwts.builder()
                 .header()
                 .add(getCommonHeaders())
                 .and()
                 .claims()
                     .add(getCommonClaims(jwtProperties.getBearerTokenExpiration()))
-                    .subject(username)
+                    .subject(sub)
                     .add("roles", roles)
-                    .and()
-                .signWith(getSigningKey())
-                .compact();
-    }
-
-    @Override
-    public String generateRefreshToken(String username) {
-        return Jwts.builder()
-                .header()
-                    .add(getCommonHeaders())
-                    .and()
-                .claims()
-                    .add(getCommonClaims(jwtProperties.getRefreshTokenExpiration()))
-                    .subject(username)
                     .and()
                 .signWith(getSigningKey())
                 .compact();
@@ -80,7 +65,7 @@ public class JWTProviderImpl implements JWTProvider {
     }
 
     @Override
-    public String getUsernameFromToken(String token) {
+    public String getSubFromToken(String token) {
         return Jwts.parser()
                 .verifyWith(getSigningKey())
                 .build()
@@ -91,15 +76,14 @@ public class JWTProviderImpl implements JWTProvider {
 
     @Override
     public Set<String> getRolesFromToken(String token) {
-        return new HashSet<>(Set.of(
+        return new HashSet<>(
+                (List<String>) // Casting to List<String> because that's what the exception states as the type of the Claim value
                 Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .get("roles")
-                .toString()
-                .split(", "))
+                        .verifyWith(getSigningKey())
+                        .build()
+                        .parseSignedClaims(token)
+                        .getPayload()
+                        .get("roles")
         );
     }
 

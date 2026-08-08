@@ -8,7 +8,7 @@ import java.util.Set;
 public interface JWTValidator {
     boolean tokenIsValid(String token);
 
-    String getUsernameFromToken(String token);
+    String getSubFromToken(String token);
 
     Set<String> getRolesFromToken(String token);
 }
