@@ -3,6 +3,7 @@ package org.pileka.birdwatching_exception_commons.handler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.pileka.birdwatching_exception_commons.exception.EntityDoesntExistException;
+import org.pileka.birdwatching_exception_commons.exception.ReferredEntityDoesntExistException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,13 @@ public class CommonAdvice {
     @ExceptionHandler(EntityDoesntExistException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
     public ResponseEntity<String> handleEntityDoesntExist(EntityDoesntExistException e) {
+        logger.debug(e.getMessage(), e);
+        return ResponseEntity.notFound().build();
+    }
+
+    @ExceptionHandler(ReferredEntityDoesntExistException.class)
+    @ResponseStatus(code = HttpStatus.UNPROCESSABLE_CONTENT)
+    public ResponseEntity<String> handleReferredEntityDoesntExist(ReferredEntityDoesntExistException e) {
         logger.debug(e.getMessage(), e);
         return ResponseEntity.notFound().build();
     }
