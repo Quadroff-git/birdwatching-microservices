@@ -25,16 +25,16 @@ public class CommonAdvice {
 
     @ExceptionHandler(EntityDoesntExistException.class)
     @ResponseStatus(code = HttpStatus.NOT_FOUND)
-    public ResponseEntity<String> handleEntityDoesntExist(EntityDoesntExistException e) {
+    public ErrorResponse handleEntityDoesntExist(EntityDoesntExistException e) {
         logger.debug(e.getMessage(), e);
-        return ResponseEntity.notFound().build();
+        return ErrorResponse.create(e, HttpStatus.NOT_FOUND, e.getMessage());
     }
 
     @ExceptionHandler(ReferredEntityDoesntExistException.class)
     @ResponseStatus(code = HttpStatus.UNPROCESSABLE_CONTENT)
-    public ResponseEntity<String> handleReferredEntityDoesntExist(ReferredEntityDoesntExistException e) {
+    public ErrorResponse handleReferredEntityDoesntExist(ReferredEntityDoesntExistException e) {
         logger.debug(e.getMessage(), e);
-        return ResponseEntity.notFound().build();
+        return ErrorResponse.create(e, HttpStatus.UNPROCESSABLE_CONTENT, e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
