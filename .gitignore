@@ -9,4 +9,5 @@ build
 # Ignore Kotlin plugin data
 .kotlin
 
-.env
+### Security ###
+secret.env

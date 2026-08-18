@@ -1,0 +1,36 @@
+spring:
+  config:
+    import:
+      - optional:file:.env[.properties]
+      - optional:file:secret.env[.properties]
+  application:
+    name: sighting-service
+  datasource:
+    password: ${POSTGRES_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: create
+  rabbitmq:
+    host: ${RABBIT_HOST}
+    port: ${RABBIT_PORT}
+    username: ${RABBIT_USERNAME}
+    password: ${RABBITMQ_DEFAULT_PASS}
+
+server:
+  port: ${SIGHTINGS_PORT}
+  servlet:
+    context-path: ${SERVER_PATH}
+
+api:
+  queue:
+    name: ${SIGHTINGS_QUEUE}
+  paths:
+    sightings: ${SIGHTINGS_PATH}
+    birds: ${BIRDS_PATH}
+    users: ${USERS_PATH}
+  gateway:
+    host: ${GATEWAY_HOST}
+    port: ${GATEWAY_PORT}
+
+jwt:
+  secret: ${JWT_SECRET}

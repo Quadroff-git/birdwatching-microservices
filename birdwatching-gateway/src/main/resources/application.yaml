@@ -5,13 +5,25 @@ spring:
         webmvc:
           routes:
             - id: bird-service
-              uri: http://bird-service:8081/
+              uri: http://bird-service:${BIRDS_PORT}/
               predicates:
-                - Path=/api/birds/**
+                - Path=${BIRDS_PATH}/**
             - id: user-service
-              uri: http://user-service:8082/
+              uri: http://user-service:${USERS_PORT}/
               predicates:
-                - Path=/api/users/**,/api/auth/**
+                - Path=${USERS_PATH}/**, ${AUTH_PATH}/**
 
   application:
     name: gateway
+
+logging:
+  level:
+    org:
+      springframework:
+        cloud:
+          gateway: TRACE
+
+server:
+  port: ${GATEWAY_PORT}
+  servlet:
+    context-path: ${SERVER_PATH}

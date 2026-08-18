@@ -3,6 +3,7 @@ package org.pileka.user_service.security;
 import org.pileka.birdwatching_security_commons.config.JWTProperties;
 import org.pileka.birdwatching_security_commons.jwt.JWTProvider;
 import org.pileka.birdwatching_security_commons.jwt.impl.JWTProviderImpl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -23,10 +24,17 @@ import java.util.List;
 @Configuration
 public class SecurityConfig {
 
+    private final String authPath;
+
+    public SecurityConfig(@Value("${api.paths.auth}") String authPath) {
+        this.authPath = authPath;
+    }
+
+
     @Bean(name = "AuthSecurityFilterChain")
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http
-                .securityMatcher("/api/auth/**")
+                .securityMatcher(authPath + "/**")
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)

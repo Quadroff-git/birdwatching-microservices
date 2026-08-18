@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
 
-@RequestMapping("api/user")
+@RequestMapping("${api.paths.users}")
 public interface UserController {
 
     @GetMapping(path = "/{id}", produces = "application/json")

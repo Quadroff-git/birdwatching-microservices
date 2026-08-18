@@ -1,28 +1,43 @@
 services:
   bird-service:
     image: bird-service:latest
+    env_file:
+    - "secret.env"
+    - ".env"
     environment:
-      - JWT_SECRET=${JWT_SECRET}
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/birdwatching_birds
-      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
-      - SPRING_DATASOURCE_USERNAME=postgres
     ports:
-      - 8081:8081
+      - ${BIRDS_PORT}:${BIRDS_PORT}
     depends_on:
       postgres:
         condition: service_healthy
 
   user-service:
     image: user-service:latest
+    env_file:
+    - "secret.env"
+    - ".env"
     environment:
-      - JWT_SECRET=${JWT_SECRET}
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/birdwatching_users
-      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
-      - SPRING_DATASOURCE_USERNAME=postgres
     ports:
-      - 8082:8082
+      - ${USERS_PORT}:${USERS_PORT}
     depends_on:
       postgres:
+        condition: service_healthy
+
+  sighting-service:
+    image: sighting-service:latest
+    env_file:
+    - "secret.env"
+    - ".env"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/birdwatching_sightings
+    ports:
+      - ${SIGHTINGS_PORT}:${SIGHTINGS_PORT}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbit:
         condition: service_healthy
 
   postgres:
@@ -32,9 +47,9 @@ services:
     volumes:
       - ./docker-postgresql-multiple-databases:/docker-entrypoint-initdb.d # script for multiple db support
       - db-data:/var/lib/postgresql
+    env_file: "secret.env"
     environment:
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_MULTIPLE_DATABASES="birdwatching_birds", "birdwatching_users"
+      - POSTGRES_MULTIPLE_DATABASES="birdwatching_birds", "birdwatching_users", "birdwatching_sightings"
     expose:
       - 5432
     healthcheck:
@@ -43,10 +58,22 @@ services:
       timeout: 5s
       retries: 5
 
+  rabbit:
+    image: rabbitmq:3.13-management
+    env_file: "secret.env"
+    expose:
+      - ${RABBIT_PORT}
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   gateway:
     image: birdwatching-gateway:latest
+    env_file: ".env"
     ports:
-      - 8080:8080 # actually forwarding queries to the services probably requires more configuration
+      - ${GATEWAY_PORT}:${GATEWAY_PORT}
 
 volumes:
   db-data:

@@ -1,14 +1,27 @@
 spring:
   config:
-    import: optional:file:.env[.properties]
+    import:
+      - optional:file:.env[.properties]
+      - optional:file:secret.env[.properties]
   application:
     name: user-service
+  datasource:
+    password: ${POSTGRES_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: create
+
+
+api:
+  paths:
+    auth: ${AUTH_PATH}
+    users: ${USERS_PATH}
 
 jwt:
   secret: ${JWT_SECRET}
 
 server:
-  port: 8082
+  port: ${USERS_PORT}
+  servlet:
+    context-path: ${SERVER_PATH}
+

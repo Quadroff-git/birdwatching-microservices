@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("api/birds")
+@RequestMapping("${api.paths.birds}")
 public interface BirdController {
 
     @PostMapping(produces = "application/json")

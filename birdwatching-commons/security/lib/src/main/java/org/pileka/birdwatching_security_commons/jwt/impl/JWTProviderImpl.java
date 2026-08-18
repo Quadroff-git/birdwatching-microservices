@@ -11,9 +11,8 @@ import org.pileka.birdwatching_security_commons.jwt.JWTProvider;
 import org.springframework.util.Assert;
 
 import javax.crypto.SecretKey;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class JWTProviderImpl implements JWTProvider {
@@ -77,15 +76,14 @@ public class JWTProviderImpl implements JWTProvider {
 
     @Override
     public Set<String> getRolesFromToken(String token) {
-        return new HashSet<>(Set.of(
+        return new HashSet<>(
+                (List<String>) // Casting to List<String> because that's what the exception states as the type of the Claim value
                 Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload()
-                .get("roles")
-                .toString()
-                .split(", "))
+                        .verifyWith(getSigningKey())
+                        .build()
+                        .parseSignedClaims(token)
+                        .getPayload()
+                        .get("roles")
         );
     }
 

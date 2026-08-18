@@ -1,0 +1,13 @@
+package org.pileka.sighting_service;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class SightingServiceApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
+}

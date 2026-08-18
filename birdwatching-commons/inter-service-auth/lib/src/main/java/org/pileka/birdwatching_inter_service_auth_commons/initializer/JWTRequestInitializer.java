@@ -1,7 +1,6 @@
 package org.pileka.birdwatching_inter_service_auth_commons.initializer;
 
 import org.pileka.birdwatching_security_commons.jwt.JWTProvider;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.ClientHttpRequest;
 import org.springframework.http.client.ClientHttpRequestInitializer;
 
@@ -15,11 +14,11 @@ public class JWTRequestInitializer implements ClientHttpRequestInitializer {
 
     private final JWTProvider jwtProvider;
 
-    @Value("${spring.application.name}")
-    private static String serviceName;
+    private final String serviceName;
 
-    public JWTRequestInitializer(JWTProvider jwtProvider) {
+    public JWTRequestInitializer(JWTProvider jwtProvider, String serviceName){
         this.jwtProvider = jwtProvider;
+        this.serviceName = serviceName;
     }
 
     @Override
