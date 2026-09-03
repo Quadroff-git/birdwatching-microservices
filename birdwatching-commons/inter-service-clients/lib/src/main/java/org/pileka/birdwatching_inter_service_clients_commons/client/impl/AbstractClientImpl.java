@@ -1,4 +1,4 @@
-package org.pileka.sighting_service.client.impl;
+package org.pileka.birdwatching_inter_service_clients_commons.client.impl;
 
 import org.pileka.birdwatching_exception_commons.exception.EntityDoesntExistException;
 import org.springframework.http.HttpStatusCode;

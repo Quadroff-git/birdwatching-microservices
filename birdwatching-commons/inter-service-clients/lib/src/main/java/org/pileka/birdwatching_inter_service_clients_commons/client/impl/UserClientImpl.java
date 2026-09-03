@@ -1,10 +1,10 @@
-package org.pileka.sighting_service.client.impl;
+package org.pileka.birdwatching_inter_service_clients_commons.client.impl;
 
-import org.pileka.sighting_service.client.UserClient;
+import org.pileka.birdwatching_inter_service_clients_commons.client.UserClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
-import tools.jackson.databind.JsonNode;
+
 
 @Component
 public class UserClientImpl extends AbstractClientImpl implements UserClient {
@@ -19,16 +19,5 @@ public class UserClientImpl extends AbstractClientImpl implements UserClient {
     @Override
     public boolean userExists(long id) {
         return super.resourceExists(id);
-    }
-
-    @Override
-    public String getUsernameById(long id) {
-        return client
-                .get()
-                .uri("/{id}", id)
-                .retrieve()
-                .body(JsonNode.class)
-                .get("username")
-                .asString();
     }
 }

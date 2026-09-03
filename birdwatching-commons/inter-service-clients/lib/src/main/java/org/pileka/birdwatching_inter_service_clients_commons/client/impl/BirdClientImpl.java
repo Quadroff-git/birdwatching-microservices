@@ -1,6 +1,6 @@
-package org.pileka.sighting_service.client.impl;
+package org.pileka.birdwatching_inter_service_clients_commons.client.impl;
 
-import org.pileka.sighting_service.client.BirdClient;
+import org.pileka.birdwatching_inter_service_clients_commons.client.BirdClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;

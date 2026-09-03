@@ -8,7 +8,9 @@ include 'birdwatching-commons:security-lib'
 include 'birdwatching-commons:exception-lib'
 include 'birdwatching-gateway'
 include 'birdwatching-commons:inter-service-auth-lib'
+include 'birdwatching-commons:inter-service-clients-lib'
 
 project(':birdwatching-commons:security-lib').projectDir = file('birdwatching-commons/security/lib')
 project(':birdwatching-commons:exception-lib').projectDir = file('birdwatching-commons/exception/lib')
 project(':birdwatching-commons:inter-service-auth-lib').projectDir = file('birdwatching-commons/inter-service-auth/lib')
+project(':birdwatching-commons:inter-service-clients-lib').projectDir = file('birdwatching-commons/inter-service-clients/lib')
