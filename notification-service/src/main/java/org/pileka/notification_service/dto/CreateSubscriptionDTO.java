@@ -1,3 +1,3 @@
 package org.pileka.notification_service.dto;
 
-public record CreateSubscriptionDTO (double userId, double birdId) {}
+public record CreateSubscriptionDTO (long userId, long birdId) {}
