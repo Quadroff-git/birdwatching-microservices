@@ -12,6 +12,7 @@ import org.pileka.sighting_service.dto.QuerySightingDTO;
 import org.pileka.sighting_service.dto.ResponseSightingDTO;
 import org.pileka.sighting_service.mapper.SightingMapper;
 import org.pileka.sighting_service.model.Sighting;
+import org.pileka.sighting_service.logging.PerformanceMonitor;
 import org.pileka.sighting_service.publisher.SightingPublisher;
 import org.pileka.sighting_service.repository.SightingRepository;
 import org.pileka.sighting_service.service.SightingService;
@@ -31,6 +32,7 @@ public class SightingServiceImpl implements SightingService {
     private final UserClient userClient;
     private final SightingPublisher sightingPublisher;
     private final AuditLogger auditLogger;
+    private final PerformanceMonitor performanceMonitor;
 
     @Override
     public ResponseSightingDTO create(CreateUpdateSightingDTO createDto) {
@@ -39,10 +41,11 @@ public class SightingServiceImpl implements SightingService {
                     createDto.getBirdId(), createDto.getUserId());
             checkIdReferences(createDto);
 
+            Sighting sighting = sightingMapper.toModel(createDto);
             ResponseSightingDTO responseDto = sightingMapper.toDto(
-                    sightingRepository.save(
-                            sightingMapper.toModel(createDto)
-                    )
+                    performanceMonitor.measure("db.sighting.save", () -> {
+                        return sightingRepository.save(sighting);
+                    })
             );
 
             log.info("Sighting with id={} created", responseDto.getId());
@@ -66,7 +69,9 @@ public class SightingServiceImpl implements SightingService {
     @Override
     public ResponseSightingDTO getById(long id) {
         return sightingMapper.toDto(
-                sightingRepository.findById(id).orElseThrow(
+                performanceMonitor.measure("db.sighting.findById", () -> {
+                    return sightingRepository.findById(id);
+                }).orElseThrow(
                         () -> new EntityDoesntExistException("Sighting with id %d doesn't exist and can't be fetched."
                                 .formatted(id)
                         )
@@ -76,10 +81,12 @@ public class SightingServiceImpl implements SightingService {
 
     @Override
     public Page<ResponseSightingDTO> get(QuerySightingDTO queryDto, Pageable pageable) {
-        return sightingRepository.findBy(
-                SightingSpecificationUtil.buildFromQueryDTO(queryDto),
-                p -> p.page(pageable)
-        ).map(sightingMapper::toDto);
+        return performanceMonitor.measure("db.sighting.findBy", () -> {
+            return sightingRepository.findBy(
+                    SightingSpecificationUtil.buildFromQueryDTO(queryDto),
+                    p -> p.page(pageable)
+            );
+        }).map(sightingMapper::toDto);
     }
 
     @Override
@@ -87,14 +94,18 @@ public class SightingServiceImpl implements SightingService {
         try {
             checkIdReferences(updateDto);
 
-            Sighting sighting = sightingRepository.findById(id).orElseThrow(
+            Sighting sighting = performanceMonitor.measure("db.sighting.findById", () -> {
+                return sightingRepository.findById(id);
+            }).orElseThrow(
                     () -> new EntityDoesntExistException("Sighting with id %d doesn't exist and can't be updated"
                         .formatted(id)
                     )
             );
 
             sightingMapper.update(sighting, updateDto);
-            sightingRepository.save(sighting);
+            performanceMonitor.measure("db.sighting.save", () -> {
+                sightingRepository.save(sighting);
+            });
 
             ResponseSightingDTO updatedSighting = sightingMapper.toDto(sighting);
             auditLogger.success("SIGHTING_UPDATE", "sightingId=" + id);
@@ -108,13 +119,17 @@ public class SightingServiceImpl implements SightingService {
     @Override
     public ResponseSightingDTO delete(long id) {
         try {
-            Sighting sighting = sightingRepository.findById(id).orElseThrow(
+            Sighting sighting = performanceMonitor.measure("db.sighting.findById", () -> {
+                return sightingRepository.findById(id);
+            }).orElseThrow(
                     () -> new EntityDoesntExistException("Sighting with id %d doesn't exist and can't be deleted"
                             .formatted(id)
                     )
             );
 
-            sightingRepository.delete(sighting);
+            performanceMonitor.measure("db.sighting.delete", () -> {
+                sightingRepository.delete(sighting);
+            });
 
             ResponseSightingDTO deletedSighting = sightingMapper.toDto(sighting);
             auditLogger.success("SIGHTING_DELETE", "sightingId=" + id);

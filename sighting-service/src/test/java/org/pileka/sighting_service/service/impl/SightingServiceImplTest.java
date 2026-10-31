@@ -11,6 +11,7 @@ import org.pileka.sighting_service.dto.CreateUpdateSightingDTO;
 import org.pileka.sighting_service.dto.ResponseSightingDTO;
 import org.pileka.sighting_service.mapper.SightingMapper;
 import org.pileka.sighting_service.model.Sighting;
+import org.pileka.sighting_service.logging.PerformanceMonitor;
 import org.pileka.sighting_service.publisher.SightingPublisher;
 import org.pileka.sighting_service.repository.SightingRepository;
 
@@ -41,6 +42,8 @@ class SightingServiceImplTest {
 
     private AuditLogger auditLogger;
 
+    private PerformanceMonitor performanceMonitor;
+
     private SightingServiceImpl sightingService;
 
     @BeforeEach
@@ -51,8 +54,10 @@ class SightingServiceImplTest {
         userClient = mock(UserClient.class);
         sightingPublisher = mock(SightingPublisher.class);
         auditLogger = mock(AuditLogger.class);
+        performanceMonitor = new PerformanceMonitor(mock(org.slf4j.Logger.class), 1000);
         sightingService = new SightingServiceImpl(
-                sightingRepository, sightingMapper, birdClient, userClient, sightingPublisher, auditLogger
+                sightingRepository, sightingMapper, birdClient, userClient, sightingPublisher, auditLogger,
+                performanceMonitor
         );
     }
 
