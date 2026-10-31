@@ -98,3 +98,8 @@ bash gradlew :sighting-service:test --tests 'org.pileka.sighting_service.logging
   they can be instrumented later without changing the wire contract.
 - The correlation id is trusted as supplied by the caller. Only request-scoped MDC cleanup and
   blank/absent handling are implemented.
+
+## Related
+
+- Audit logging (task 3.2) reuses this correlation id in every audit line; see
+  [audit-logging.md](audit-logging.md).

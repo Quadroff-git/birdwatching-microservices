@@ -10,3 +10,5 @@ A WIP back-end REST-API for a birdwatching app built as a pet-project with Sprin
 ## Logging
 Request correlation id propagation between `sighting-service` and `bird-service` is described in
 [docs/correlation-id.md](docs/correlation-id.md).
+User-action audit logging, including the separate audit file and retention policy, is described in
+[docs/audit-logging.md](docs/audit-logging.md).
