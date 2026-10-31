@@ -10,6 +10,7 @@ import org.pileka.bird_service.model.Bird;
 import org.pileka.bird_service.repository.BirdRepository;
 import org.pileka.bird_service.service.BirdService;
 import org.pileka.bird_service.specification.BirdSpecificationUtil;
+import org.pileka.birdwatching_audit_commons.audit.AuditLogger;
 import org.pileka.birdwatching_exception_commons.exception.EntityDoesntExistException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,14 +27,22 @@ public class BirdServiceImpl implements BirdService {
 
     private final BirdRepository birdRepository;
     private final BirdMapper birdMapper;
+    private final AuditLogger auditLogger;
 
     @Override
     public ResponseBirdDTO create(CreateUpdateBirdDTO createDto) {
-        return birdMapper.toDto(
-                birdRepository.save(
-                        birdMapper.toModel(createDto)
-                )
-        );
+        try {
+            ResponseBirdDTO createdBird = birdMapper.toDto(
+                    birdRepository.save(
+                            birdMapper.toModel(createDto)
+                    )
+            );
+            auditLogger.success("BIRD_CREATE", "birdId=" + createdBird.getId());
+            return createdBird;
+        } catch (RuntimeException ex) {
+            auditLogger.failure("BIRD_CREATE", createDetails(createDto), ex);
+            throw ex;
+        }
     }
 
     @Override
@@ -55,26 +64,40 @@ public class BirdServiceImpl implements BirdService {
 
     @Override
     public ResponseBirdDTO update(long id, CreateUpdateBirdDTO updateDto) {
-        return  doWithFoundById(id,
-                bird -> {
-                    birdMapper.update(bird, updateDto);
-                    birdRepository.save(bird);
+        try {
+            ResponseBirdDTO updatedBird = doWithFoundById(id,
+                    bird -> {
+                        birdMapper.update(bird, updateDto);
+                        birdRepository.save(bird);
 
-                    return birdMapper.toDto(bird);
-                },
-                "Bird with id %d doesn't exist and can't be updated.".formatted(id)
-        );
+                        return birdMapper.toDto(bird);
+                    },
+                    "Bird with id %d doesn't exist and can't be updated.".formatted(id)
+            );
+            auditLogger.success("BIRD_UPDATE", "birdId=" + id);
+            return updatedBird;
+        } catch (RuntimeException ex) {
+            auditLogger.failure("BIRD_UPDATE", "birdId=" + id, ex);
+            throw ex;
+        }
     }
 
     @Override
     public ResponseBirdDTO delete(long id) {
-        return doWithFoundById(id,
-                bird -> {
-                    birdRepository.delete(bird);
-                    return birdMapper.toDto(bird);
-                },
-                "Bird with id %d doesn't exist and can't be deleted.".formatted(id)
-        );
+        try {
+            ResponseBirdDTO deletedBird = doWithFoundById(id,
+                    bird -> {
+                        birdRepository.delete(bird);
+                        return birdMapper.toDto(bird);
+                    },
+                    "Bird with id %d doesn't exist and can't be deleted.".formatted(id)
+            );
+            auditLogger.success("BIRD_DELETE", "birdId=" + id);
+            return deletedBird;
+        } catch (RuntimeException ex) {
+            auditLogger.failure("BIRD_DELETE", "birdId=" + id, ex);
+            throw ex;
+        }
     }
 
     /**
@@ -92,5 +115,9 @@ public class BirdServiceImpl implements BirdService {
         else {
             throw new EntityDoesntExistException(exceptionMsg);
         }
+    }
+
+    private String createDetails(CreateUpdateBirdDTO createDto) {
+        return createDto == null ? "commonName=-" : "commonName=" + createDto.getCommonName();
     }
 }

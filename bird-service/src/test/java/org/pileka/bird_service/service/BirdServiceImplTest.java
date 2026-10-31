@@ -15,6 +15,7 @@ import org.pileka.bird_service.model.ConservationStatus;
 import org.pileka.bird_service.repository.BirdRepository;
 import org.pileka.bird_service.service.impl.BirdServiceImpl;
 import org.pileka.bird_service.test_util.BirdTestUtil;
+import org.pileka.birdwatching_audit_commons.audit.AuditLogger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -28,6 +29,7 @@ import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -35,11 +37,14 @@ public class BirdServiceImplTest {
 
     BirdRepository birdRepository;
 
+    AuditLogger auditLogger;
+
     BirdServiceImpl birdService;
 
     BirdServiceImplTest() {
         birdRepository = mock(BirdRepository.class);
-        birdService = new BirdServiceImpl(birdRepository, Mappers.getMapper(BirdMapper.class));
+        auditLogger = mock(AuditLogger.class);
+        birdService = new BirdServiceImpl(birdRepository, Mappers.getMapper(BirdMapper.class), auditLogger);
     }
 
     @Test
@@ -51,6 +56,7 @@ public class BirdServiceImplTest {
         BirdTestUtil.assertDtoEqualsModel(birdService.create(createDto), BirdTestUtil.getBird());
 
         verify(birdRepository).save(any(Bird.class));
+        verify(auditLogger).success("BIRD_CREATE", "birdId=1");
     }
 
     @Test
@@ -169,6 +175,7 @@ public class BirdServiceImplTest {
         BirdTestUtil.assertDtoEqualsModel(result, updatedBird);
         verify(birdRepository, times(1)).findById(birdId);
         verify(birdRepository, times(1)).save(any(Bird.class));
+        verify(auditLogger).success("BIRD_UPDATE", "birdId=1");
     }
 
     @Test
@@ -211,6 +218,7 @@ public class BirdServiceImplTest {
 
         verify(birdRepository, times(1)).findById(nonExistentId);
         verify(birdRepository, never()).save(any(Bird.class));
+        verify(auditLogger).failure(eq("BIRD_UPDATE"), eq("birdId=999"), any(EntityDoesntExistException.class));
     }
 
     @Test
@@ -225,6 +233,7 @@ public class BirdServiceImplTest {
 
         verify(birdRepository, times(1)).findById(birdId);
         verify(birdRepository, times(1)).delete(existingBird);
+        verify(auditLogger).success("BIRD_DELETE", "birdId=1");
     }
 
     @Test
@@ -239,6 +248,7 @@ public class BirdServiceImplTest {
 
         verify(birdRepository, times(1)).findById(nonExistentId);
         verify(birdRepository, never()).delete(any(Bird.class));
+        verify(auditLogger).failure(eq("BIRD_DELETE"), eq("birdId=999"), any(EntityDoesntExistException.class));
     }
 
     @Test
