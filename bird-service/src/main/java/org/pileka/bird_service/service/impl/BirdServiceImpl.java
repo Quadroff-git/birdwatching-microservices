@@ -1,6 +1,7 @@
 package org.pileka.bird_service.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.pileka.bird_service.dto.CreateUpdateBirdDTO;
 import org.pileka.bird_service.dto.QueryBirdDTO;
 import org.pileka.bird_service.dto.ResponseBirdDTO;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BirdServiceImpl implements BirdService {
@@ -36,6 +38,7 @@ public class BirdServiceImpl implements BirdService {
 
     @Override
     public ResponseBirdDTO getById(long id) {
+        log.info("Fetching bird with id={}", id);
         return doWithFoundById(id,
                 birdMapper::toDto,
                 "Bird with id %d doesn't exist and can't be fetched.".formatted(id)
