@@ -15,6 +15,7 @@ import org.pileka.bird_service.model.ConservationStatus;
 import org.pileka.bird_service.repository.BirdRepository;
 import org.pileka.bird_service.service.impl.BirdServiceImpl;
 import org.pileka.bird_service.test_util.BirdTestUtil;
+import org.pileka.bird_service.logging.PerformanceMonitor;
 import org.pileka.birdwatching_audit_commons.audit.AuditLogger;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -39,12 +40,17 @@ public class BirdServiceImplTest {
 
     AuditLogger auditLogger;
 
+    PerformanceMonitor performanceMonitor;
+
     BirdServiceImpl birdService;
 
     BirdServiceImplTest() {
         birdRepository = mock(BirdRepository.class);
         auditLogger = mock(AuditLogger.class);
-        birdService = new BirdServiceImpl(birdRepository, Mappers.getMapper(BirdMapper.class), auditLogger);
+        performanceMonitor = new PerformanceMonitor(mock(org.slf4j.Logger.class), 1000);
+        birdService = new BirdServiceImpl(
+                birdRepository, Mappers.getMapper(BirdMapper.class), auditLogger, performanceMonitor
+        );
     }
 
     @Test

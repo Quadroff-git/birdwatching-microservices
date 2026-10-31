@@ -24,6 +24,8 @@ server:
     context-path: ${SERVER_PATH}
 
 logging:
+  level:
+    PERFORMANCE: INFO
   file:
     name: logs/application.log
   logback:
@@ -35,3 +37,6 @@ logging:
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [bird-service] [correlationId=%X{correlationId:-}] [%thread] %-40.40logger{39} : %msg%n%ex"
     file: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [bird-service] [correlationId=%X{correlationId:-}] [%thread] %-40.40logger{39} : %msg%n%ex"
+
+performance:
+  slow-threshold-ms: ${PERFORMANCE_SLOW_THRESHOLD_MS:1000}

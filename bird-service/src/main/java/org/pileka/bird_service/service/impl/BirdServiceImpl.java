@@ -10,6 +10,7 @@ import org.pileka.bird_service.model.Bird;
 import org.pileka.bird_service.repository.BirdRepository;
 import org.pileka.bird_service.service.BirdService;
 import org.pileka.bird_service.specification.BirdSpecificationUtil;
+import org.pileka.bird_service.logging.PerformanceMonitor;
 import org.pileka.birdwatching_audit_commons.audit.AuditLogger;
 import org.pileka.birdwatching_exception_commons.exception.EntityDoesntExistException;
 import org.springframework.data.domain.Page;
@@ -28,14 +29,16 @@ public class BirdServiceImpl implements BirdService {
     private final BirdRepository birdRepository;
     private final BirdMapper birdMapper;
     private final AuditLogger auditLogger;
+    private final PerformanceMonitor performanceMonitor;
 
     @Override
     public ResponseBirdDTO create(CreateUpdateBirdDTO createDto) {
         try {
+            Bird bird = birdMapper.toModel(createDto);
             ResponseBirdDTO createdBird = birdMapper.toDto(
-                    birdRepository.save(
-                            birdMapper.toModel(createDto)
-                    )
+                    performanceMonitor.measure("db.bird.save", () -> {
+                        return birdRepository.save(bird);
+                    })
             );
             auditLogger.success("BIRD_CREATE", "birdId=" + createdBird.getId());
             return createdBird;
@@ -56,10 +59,12 @@ public class BirdServiceImpl implements BirdService {
 
     @Override
     public Page<ResponseBirdDTO> get(QueryBirdDTO queryDto, Pageable pageable) {
-        return birdRepository.findBy(
-                BirdSpecificationUtil.buildFromQueryDTO(queryDto),
-                p -> p.page(pageable)
-        ).map(birdMapper::toDto);
+        return performanceMonitor.measure("db.bird.findBy", () -> {
+            return birdRepository.findBy(
+                    BirdSpecificationUtil.buildFromQueryDTO(queryDto),
+                    p -> p.page(pageable)
+            );
+        }).map(birdMapper::toDto);
     }
 
     @Override
@@ -68,7 +73,9 @@ public class BirdServiceImpl implements BirdService {
             ResponseBirdDTO updatedBird = doWithFoundById(id,
                     bird -> {
                         birdMapper.update(bird, updateDto);
-                        birdRepository.save(bird);
+                        performanceMonitor.measure("db.bird.save", () -> {
+                            birdRepository.save(bird);
+                        });
 
                         return birdMapper.toDto(bird);
                     },
@@ -87,7 +94,9 @@ public class BirdServiceImpl implements BirdService {
         try {
             ResponseBirdDTO deletedBird = doWithFoundById(id,
                     bird -> {
-                        birdRepository.delete(bird);
+                        performanceMonitor.measure("db.bird.delete", () -> {
+                            birdRepository.delete(bird);
+                        });
                         return birdMapper.toDto(bird);
                     },
                     "Bird with id %d doesn't exist and can't be deleted.".formatted(id)
@@ -108,7 +117,9 @@ public class BirdServiceImpl implements BirdService {
      * @return whatever {@code function} returns
      */
     private ResponseBirdDTO doWithFoundById(long id, Function<Bird, ResponseBirdDTO> function, String exceptionMsg) {
-        Optional<Bird> optionalBird = birdRepository.findById(id);
+        Optional<Bird> optionalBird = performanceMonitor.measure("db.bird.findById", () -> {
+            return birdRepository.findById(id);
+        });
         if (optionalBird.isPresent()) {
             return function.apply(optionalBird.get());
         }
