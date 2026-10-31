@@ -1,0 +1,51 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+    id 'java-library'
+    id 'org.springframework.boot' version '4.0.5' apply false
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = "org.pileka"
+version = "0.0.1-SNAPSHOT"
+
+base {
+    archivesName = 'birdwatching-audit-commons'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom SpringBootPlugin.BOM_COORDINATES
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.slf4j:slf4j-api'
+    compileOnly 'org.springframework:spring-webmvc'
+    compileOnly 'org.springframework.security:spring-security-core'
+    compileOnly 'org.springframework.boot:spring-boot-autoconfigure'
+    compileOnly 'jakarta.servlet:jakarta.servlet-api'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework:spring-webmvc'
+    testImplementation 'org.springframework.security:spring-security-core'
+    testImplementation 'org.springframework.boot:spring-boot-autoconfigure'
+    testImplementation 'jakarta.servlet:jakarta.servlet-api'
+    testImplementation 'org.slf4j:slf4j-api'
+
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
