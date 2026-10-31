@@ -12,3 +12,5 @@ Request correlation id propagation between `sighting-service` and `bird-service`
 [docs/correlation-id.md](docs/correlation-id.md).
 User-action audit logging, including the separate audit file and retention policy, is described in
 [docs/audit-logging.md](docs/audit-logging.md).
+Performance timing for database queries and inter-service calls, including the production-only slow
+operation filter, is described in [docs/performance-logging.md](docs/performance-logging.md).
