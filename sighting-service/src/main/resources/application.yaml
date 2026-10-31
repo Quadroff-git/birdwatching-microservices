@@ -34,3 +34,7 @@ api:
 
 jwt:
   secret: ${JWT_SECRET}
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [sighting-service] [correlationId=%X{correlationId:-}] [%thread] %-40.40logger{39} : %msg%n%ex"

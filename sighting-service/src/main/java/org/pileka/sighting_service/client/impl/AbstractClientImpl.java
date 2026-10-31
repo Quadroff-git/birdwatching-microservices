@@ -1,6 +1,7 @@
 package org.pileka.sighting_service.client.impl;
 
 import org.pileka.birdwatching_exception_commons.exception.EntityDoesntExistException;
+import org.pileka.sighting_service.logging.CorrelationIdRequestInitializer;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.web.client.RestClient;
 
@@ -11,6 +12,7 @@ public class AbstractClientImpl {
     public AbstractClientImpl(RestClient.Builder builder, String baseUrl) {
         this.client = builder
                 .baseUrl(baseUrl)
+                .requestInitializer(new CorrelationIdRequestInitializer())
                 .build();
     }
 

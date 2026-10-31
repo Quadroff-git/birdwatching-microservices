@@ -1,6 +1,7 @@
 package org.pileka.sighting_service.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.pileka.birdwatching_exception_commons.exception.EntityDoesntExistException;
 import org.pileka.birdwatching_exception_commons.exception.ReferredEntityDoesntExistException;
 import org.pileka.sighting_service.client.BirdClient;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class SightingServiceImpl implements SightingService {
@@ -30,6 +32,8 @@ public class SightingServiceImpl implements SightingService {
 
     @Override
     public ResponseSightingDTO create(CreateUpdateSightingDTO createDto) {
+        log.info("Creating sighting for birdId={} and userId={}",
+                createDto.getBirdId(), createDto.getUserId());
         checkIdReferences(createDto);
 
         ResponseSightingDTO responseDto = sightingMapper.toDto(
@@ -37,6 +41,8 @@ public class SightingServiceImpl implements SightingService {
                         sightingMapper.toModel(createDto)
                 )
         );
+
+        log.info("Sighting with id={} created", responseDto.getId());
 
         // If we reach this point we can assume the sighting was persisted
         sightingPublisher.publish(responseDto);

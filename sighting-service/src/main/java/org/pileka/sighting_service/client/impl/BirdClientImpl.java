@@ -1,10 +1,12 @@
 package org.pileka.sighting_service.client.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.pileka.sighting_service.client.BirdClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
+@Slf4j
 @Component
 public class BirdClientImpl extends AbstractClientImpl implements BirdClient {
 
@@ -18,6 +20,7 @@ public class BirdClientImpl extends AbstractClientImpl implements BirdClient {
 
     @Override
     public boolean birdExists(long id) {
+        log.info("Checking whether bird with id={} exists", id);
         return resourceExists(id);
     }
 }
