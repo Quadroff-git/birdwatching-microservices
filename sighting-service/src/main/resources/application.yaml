@@ -36,5 +36,14 @@ jwt:
   secret: ${JWT_SECRET}
 
 logging:
+  file:
+    name: logs/application.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 7
+      total-size-cap: 100MB
+      clean-history-on-start: true
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [sighting-service] [correlationId=%X{correlationId:-}] [%thread] %-40.40logger{39} : %msg%n%ex"
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [sighting-service] [correlationId=%X{correlationId:-}] [%thread] %-40.40logger{39} : %msg%n%ex"

@@ -28,6 +28,7 @@ dependencies {
 
 	implementation project(':birdwatching-commons:security-lib')
 	implementation project(':birdwatching-commons:exception-lib')
+	implementation project(':birdwatching-commons:audit-lib')
 	implementation project(':birdwatching-commons:inter-service-auth-lib')
 
 	implementation 'org.mapstruct:mapstruct:1.6.3'
