@@ -12,6 +12,10 @@ spring:
               uri: http://user-service:${USERS_PORT}/
               predicates:
                 - Path=${USERS_PATH}/**, ${AUTH_PATH}/**
+            - id: sighting-service
+              uri: http://sighting-service:${SIGHTINGS_PORT}/
+              predicates:
+                  - Path=${SIGHTINGS_PATH}/**
 
   application:
     name: gateway
