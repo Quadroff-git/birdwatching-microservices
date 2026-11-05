@@ -38,8 +38,9 @@ jwt:
 logging:
   level:
     PERFORMANCE: INFO
+  log-dir: ${LOG_DIR:logs}
   file:
-    name: logs/application.log
+    name: ${logging.log-dir}/application.log
   logback:
     rollingpolicy:
       max-file-size: 10MB

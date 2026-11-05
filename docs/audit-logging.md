@@ -74,26 +74,29 @@ Both services declare `implementation project(':birdwatching-commons:audit-lib')
 
 ## Files and retention
 
-Each service writes two files under its working directory:
+Each service writes two files under `LOG_DIR` (`logs` by default, `logging.log-dir`):
 
 | File | Logger | Rollover | Retention |
 | --- | --- | --- | --- |
-| `logs/application.log` | root logger | daily + 10 MB | 7 days / 100 MB total |
-| `logs/audit.log` | `AUDIT` (additivity disabled) | daily + 10 MB | 90 days / 500 MB total |
+| `${LOG_DIR}/application.log` | root logger | daily + 10 MB | 7 days / 100 MB total |
+| `${LOG_DIR}/audit.log` | `AUDIT` (additivity disabled) | daily + 10 MB | 90 days / 500 MB total |
 
 Configuration:
 
 - `logback-spring.xml` — includes Boot's `base.xml` (console + main file appenders) and adds the
-  `AUDIT_FILE` `RollingFileAppender` with the audit logger.
-- `application.yaml` — `logging.file.name`, `logging.pattern.file`, and
-  `logging.logback.rollingpolicy.*` for the main log.
+  `AUDIT_FILE` `RollingFileAppender` with the audit logger. Both appenders use `logging.log-dir` /
+  `LOG_DIR`.
+- `application.yaml` — `logging.log-dir` (`${LOG_DIR:logs}`), `logging.file.name`,
+  `logging.pattern.file`, and `logging.logback.rollingpolicy.*` for the main log.
 - `.gitignore` — `logs/` is runtime output and is not committed.
 
-Audit entries never reach the console or `logs/application.log` because the `AUDIT` logger has
+Audit entries never reach the console or `${LOG_DIR}/application.log` because the `AUDIT` logger has
 `additivity="false"` and only the `AUDIT_FILE` appender attached.
 
-In Docker the `logs/` directory lives inside the container; mount a volume if the files must survive
-container recreation (compose changes are outside this task's scope).
+In Docker the Paketo runtime working directory (`/workspace`) is not writable by the container user,
+so `compose.yaml` sets `LOG_DIR=/tmp/logs`. The files live inside the container; use
+`docker compose cp bird-service:/tmp/logs/audit.log .` to inspect them, or mount a volume if they
+must survive container recreation.
 
 ## Demonstration
 

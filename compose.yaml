@@ -6,6 +6,7 @@ services:
     - ".env"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/birdwatching_birds
+      - LOG_DIR=/tmp/logs
     ports:
       - ${BIRDS_PORT}:${BIRDS_PORT}
     depends_on:
@@ -32,6 +33,7 @@ services:
     - ".env"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/birdwatching_sightings
+      - LOG_DIR=/tmp/logs
     ports:
       - ${SIGHTINGS_PORT}:${SIGHTINGS_PORT}
     depends_on:

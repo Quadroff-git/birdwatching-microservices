@@ -56,10 +56,12 @@ The `PERFORMANCE` logger is the filter:
 
 Configuration files:
 
-- `application.yaml` — `logging.level.PERFORMANCE: INFO`, `performance.slow-threshold-ms`.
+- `application.yaml` — `logging.level.PERFORMANCE: INFO`, `logging.log-dir` (`${LOG_DIR:logs}`),
+  `performance.slow-threshold-ms`.
 - `application-prod.yaml` — `logging.level.PERFORMANCE: WARN`.
-- Performance lines go to the main log (`logs/application.log` and console); they do not go to the
-  audit file.
+- Performance lines go to the main log (`${LOG_DIR}/application.log` and console); they do not go to
+  the audit file. `compose.yaml` sets `LOG_DIR=/tmp/logs` because the container user cannot write to
+  the Paketo runtime working directory `/workspace`.
 
 ## Demonstration
 
